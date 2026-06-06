@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Woody's Ruleta</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="hero">
+
+    <div class="logo-container">
+
+    <img
+        src="{{ url_for('static', filename='img/logo.png') }}"
+        alt="Woody's Logo"
+        class="logo">
+
+</div>
+
+    <h2>Boneless & Burgers</h2>
+
+    <h3>🎰 GIRA LA RULETA Y GANA PREMIOS 🎰</h3>
+
+    <p>Todos ganan algo</p>
+
+</div>
+
+<div class="card">
+
+   <input
+    type="text"
+    id="codigo"
+    placeholder="Código de compra">
+
+<input
+    type="text"
+    id="nombre"
+    placeholder="Nombre">
+
+<button id="btnGirar">
+    VALIDAR Y GIRAR
+</button>
+
+</div>
+
+<div class="wheel-container">
+
+    <div class="pointer">▼</div>
+
+    <canvas
+        id="wheelCanvas"
+        width="500"
+        height="500">
+    </canvas>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/wheel.js') }}"></script>
+
+</body>
+</html>

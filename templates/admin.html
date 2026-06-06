@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admin Woody's</title>
+    <style>
+        body{
+            background:#000;
+            color:white;
+            font-family:Arial, sans-serif;
+            padding:30px;
+        }
+
+        h1{
+            color:#ffcc00;
+            text-align:center;
+        }
+
+        .card{
+            background:#111;
+            border:2px solid red;
+            border-radius:15px;
+            padding:20px;
+            margin-bottom:25px;
+            box-shadow:0 0 20px red;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin:8px 0;
+            border-radius:8px;
+            border:none;
+        }
+
+        button{
+            background:#e53935;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        th, td{
+            border:1px solid #444;
+            padding:10px;
+            text-align:center;
+        }
+
+        th{
+            background:#e53935;
+        }
+
+        .pendiente{
+            color:#ffcc00;
+            font-weight:bold;
+        }
+
+        .usado{
+            color:#00ff88;
+            font-weight:bold;
+        }
+
+        .codigo{
+            font-size:24px;
+            color:#ffcc00;
+            margin-top:15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🎟 Panel Admin Woody's</h1>
+
+<div class="card">
+    <h2>Generar código por venta</h2>
+
+    <input type="text" id="cliente" placeholder="Nombre del cliente">
+    <input type="text" id="telefono" placeholder="WhatsApp del cliente">
+    <input type="number" id="total" placeholder="Total de compra">
+
+    <button onclick="generarCodigo()">Generar Código</button>
+
+    <div class="codigo" id="resultado"></div>
+</div>
+
+<div class="card">
+    <h2>Historial de códigos</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Cliente</th>
+                <th>Teléfono</th>
+                <th>Total</th>
+                <th>Premio</th>
+                <th>Giros</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for c in codigos %}
+            <tr>
+                <td>{{ c[0] }}</td>
+                <td>{{ c[1] or "-" }}</td>
+                <td>{{ c[2] or "-" }}</td>
+                <td>${{ c[3] or "0" }}</td>
+                <td>{{ c[4] or "Pendiente" }}</td>
+                <td>{{ c[5] }}</td>
+                <td>
+                    {% if c[6] == 1 %}
+                        <span class="usado">Usado</span>
+                    {% else %}
+                        <span class="pendiente">Pendiente</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function generarCodigo(){
+
+    let cliente = document.getElementById("cliente").value;
+    let telefono = document.getElementById("telefono").value;
+    let total = document.getElementById("total").value;
+
+    fetch("/generar_codigo",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/x-www-form-urlencoded"
+        },
+        body:
+        "cliente="+encodeURIComponent(cliente)+
+        "&telefono="+encodeURIComponent(telefono)+
+        "&total="+encodeURIComponent(total)
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+        document.getElementById("resultado").innerHTML =
+        "Código generado: <b>" + data.codigo + "</b>";
+
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
+    });
+}
+</script>
+
+</body>
+</html>
